@@ -36,6 +36,10 @@ Train a model:
 
 The training process can be interrupted at any time, and the best checkpoint will always be saved. It is also possible to continue training from there later on.
 
+To calculate results table and graph:
+
+    ./scripts/extract_and_visualize_results.py
+
 # Steps for Windows users
 
 This repo relies on Bash scripts (.sh files), which do not run natively on Windows (CMD or PowerShell).  
