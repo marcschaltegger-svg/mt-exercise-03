@@ -1,0 +1,97 @@
+name: "deen_transformer_pre"
+joeynmt_version: "2.0.0"
+
+data:
+    train: "data/train"
+    dev:   "data/dev"
+    test:  "data/test"
+    dataset_type: "plain"
+    src:
+        lang: "de"
+        lowercase: False
+        level: "bpe"
+        voc_limit: 32000
+        voc_min_freq: 1
+        max_length: 100
+        voc_file: "shared_models/joint-vocab.txt"
+        tokenizer_type: "subword-nmt"
+        tokenizer_cfg:
+            pretokenizer: "none"
+            num_merges: 3200
+            codes: "data/codes3200.bpe"
+    trg: 
+        lang: "en"
+        lowercase: False
+        level: "bpe"
+        voc_limit: 32000
+        voc_min_freq: 1
+        max_length: 100
+        voc_file: "shared_models/joint-vocab.txt"
+        tokenizer_type: "subword-nmt"
+        tokenizer_cfg:
+            pretokenizer: "none"
+            num_merges: 3200
+            codes: "data/codes3200.bpe"
+testing:
+    beam_size: 5
+    beam_alpha: 1.0
+
+training:
+    #load_model: "your/path.ckpt"
+    random_seed: 42
+    optimizer: "adam"
+    normalization: "tokens"
+    learning_rate: 0.0003
+    batch_size: 2048
+    batch_type: "token"
+    eval_batch_size: 1024
+    eval_batch_type: "token"
+    scheduling: "plateau"
+    patience: 8
+    weight_decay: 0.0
+    decrease_factor: 0.7
+    early_stopping_metric: "ppl"
+    epochs: 10
+    validation_freq: 500
+    logging_freq: 100
+    eval_metric: ["bleu"]
+    model_dir: "models/deen_transformer_pre"
+    overwrite: False
+    shuffle: True
+    use_cuda: False
+    max_output_length: 100
+    print_valid_sents: [0, 1, 2, 3, 4]
+    label_smoothing: 0.3
+
+model:
+    initializer: "xavier_uniform"
+    bias_initializer: "zeros"
+    init_gain: 1.0
+    embed_initializer: "xavier_uniform"
+    embed_init_gain: 1.0
+    tied_embeddings: True
+    tied_softmax: True
+    encoder:
+        type: "transformer"
+        num_layers: 4
+        num_heads: 2
+        embeddings:
+            embedding_dim: 256
+            scale: True
+            dropout: 0
+        hidden_size: 256
+        ff_size: 512
+        dropout: 0
+        layer_norm: "pre"
+    decoder:
+        type: "transformer"
+        num_layers: 1
+        num_heads: 2
+        embeddings:
+            embedding_dim: 256
+            scale: True
+            dropout: 0
+        hidden_size: 256
+        ff_size: 512
+        dropout: 0
+        layer_norm: "pre"
